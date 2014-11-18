@@ -28,13 +28,20 @@ public class Project : MonoBehaviour {
     private int _number;
     public Texture _affectiveTextureBG;
     public Texture _expressiveTextureBG;
+    public Texture _categoriesTextureBG;
 
 	// Use this for initialization
 	void Start () {
+
+	}
+
+	// Update is called once per frame
+	void Update () {
+
         _boredomScore = EmoAffectiv.boredomScore;
         _frustrationScore = EmoAffectiv.frustrationScore;
         _meditationScore = EmoAffectiv.meditationScore;
-       
+
         _clenchExtent = EmoExpressiv.clenchExtent;
         _eyebrowExtent = EmoExpressiv.eyebrowExtent;
         _eyelidStateLeft = EmoExpressiv.eyelidStateLeft;
@@ -50,131 +57,15 @@ public class Project : MonoBehaviour {
         _isLookingUp = EmoExpressiv.isLookingUp;
         _isRightWink = EmoExpressiv.isRightWink;
         _smileExtent = EmoExpressiv.smileExtent;
-
-	}
-
-	// Update is called once per frame
-	void Update () {
-
-        //Affective
-        //boredom
-        if (EmoAffectiv.boredomScore != _boredomScore)
-        {
-            _boredomScore = EmoAffectiv.boredomScore;
-            Debug.Log("New boredome Score: "+ _boredomScore);
-        }
-        //frustration
-        if (EmoAffectiv.frustrationScore != _frustrationScore)
-        {
-            _frustrationScore = EmoAffectiv.frustrationScore;
-            Debug.Log("New frustration Score: " + _frustrationScore);
-        }
-        //meditation
-        if (EmoAffectiv.meditationScore != _meditationScore)
-        {
-            _meditationScore = EmoAffectiv.meditationScore;
-            Debug.Log("New meditation Score: " + _meditationScore);
-        }
-
-        //Expressive
-        //Clench extent
-        if (EmoExpressiv.clenchExtent != _clenchExtent)
-        {
-            _clenchExtent = EmoExpressiv.clenchExtent;
-            Debug.Log("New clench extent: " + _clenchExtent);
-        }
-        //Eyebrow extent
-        if (EmoExpressiv.eyebrowExtent != _eyebrowExtent)
-        {
-            _eyebrowExtent = EmoExpressiv.eyebrowExtent;
-            Debug.Log("New clench extent: " + _eyebrowExtent);
-        }
-        //Eyelid state left
-        if (EmoExpressiv.eyelidStateLeft != _eyelidStateLeft)
-        {
-            _eyelidStateLeft = EmoExpressiv.eyelidStateLeft;
-            Debug.Log("New clench extent: " + _eyelidStateLeft);
-        }
-        //Eyelid state right
-        if (EmoExpressiv.eyelidStateRight != _eyelidStateRight)
-        {
-            _eyelidStateRight = EmoExpressiv.eyelidStateRight;
-            Debug.Log("New clench extent: " + _eyelidStateRight);
-        }
-        //Eyelid location X
-        if (EmoExpressiv.eyeLocationX != _eyeLocationX)
-        {
-            _eyeLocationX = EmoExpressiv.eyeLocationX;
-            Debug.Log("New clench extent: " + _eyeLocationX);
-        }
-        //Eyelid location Y
-        if (EmoExpressiv.eyeLocationY != _eyeLocationY)
-        {
-            _eyeLocationY = EmoExpressiv.eyeLocationY;
-            Debug.Log("New clench extent: " + _eyeLocationY);
-        }
-        //is blink
-        if (EmoExpressiv.isBlink != _isBlink)
-        {
-            _isBlink = EmoExpressiv.isBlink;
-            Debug.Log("New clench extent: " + _isBlink);
-        }
-        //is eyes open
-        if (EmoExpressiv.isEyesOpen != _isEyesOpen)
-        {
-            _isEyesOpen = EmoExpressiv.isEyesOpen;
-            Debug.Log("New clench extent: " + _isEyesOpen);
-        }
-        //is left wink
-        if (EmoExpressiv.isLeftWink != _isLeftWink)
-        {
-            _isLeftWink = EmoExpressiv.isLeftWink;
-            Debug.Log("New clench extent: " + _isLeftWink);
-        }
-        //is looking down
-        if (EmoExpressiv.isLookingDown != _isLookingDown)
-        {
-            _isLookingDown = EmoExpressiv.isLookingDown;
-            Debug.Log("New clench extent: " + _isLookingDown);
-        }
-        //is looking left
-        if (EmoExpressiv.isLookingLeft != _isLookingLeft)
-        {
-            _isLookingLeft = EmoExpressiv.isLookingLeft;
-            Debug.Log("New clench extent: " + _isLookingLeft);
-        }
-        //is looking right
-        if (EmoExpressiv.isLookingRight != _isLookingRight)
-        {
-            _isLookingRight = EmoExpressiv.isLookingRight;
-            Debug.Log("New clench extent: " + _isLookingRight);
-        }
-        //is looking up
-        if (EmoExpressiv.isLookingUp != _isLookingUp)
-        {
-            _isLookingUp = EmoExpressiv.isLookingUp;
-            Debug.Log("New clench extent: " + _isLookingUp);
-        }
-        //is right wink
-        if (EmoExpressiv.isRightWink != _isRightWink)
-        {
-            _isRightWink = EmoExpressiv.isRightWink;
-            Debug.Log("New clench extent: " + _isRightWink);
-        }
-        //smile extent
-        if (EmoExpressiv.smileExtent != _smileExtent)
-        {
-            _smileExtent = EmoExpressiv.smileExtent;
-            Debug.Log("New clench extent: " + _smileExtent);
-        }
-       
 	}
 
     void OnGUI()
     {
+        GUI.Label(new Rect((Screen.width/2)-100, (Screen.height/2)-100, _categoriesTextureBG.width, _categoriesTextureBG.height), _categoriesTextureBG);
+            
+
         //Affective
         GUI.Label(new Rect(0, 0, _affectiveTextureBG.width, _affectiveTextureBG.height), _affectiveTextureBG);
-            //GUI.Box(new Rect(0, 0, 150, 50), "Laber."+_number);
             GUI.Box(new Rect(10, 10, 150, 20), "Boredom score: " + _boredomScore);
             GUI.Box(new Rect(10, 40, 150, 20), "Frustration score: " + _frustrationScore);
             GUI.Box(new Rect(10, 70, 150, 20), "Meditation score: " + _meditationScore);
