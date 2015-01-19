@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Testing : MonoBehaviour
+public class Brainwaves : MonoBehaviour
 {
     private List<GameObject> _pointsList = new List<GameObject>();
     private List<float> _xCoordList = new List<float>();
@@ -17,32 +17,17 @@ public class Testing : MonoBehaviour
     {
         InitializeScreen();
 
-        for (int j = 0; j < 40; j++)
+        for (int j = 0; j < 200; j++)
         {
             _xCoordList.Add(Random.Range(-1.0f, 1.0f));
-            //Debug.Log(_xCoordList[j]);
         }
 
         BuildPoints();
-        
-        /*Debug.Log(_xCoordList.Count);
-        Debug.Log("Element an Stelle 0:" +_xCoordList[0]);
-        Debug.Log("Element an Stelle 1:" +_xCoordList[1]);
-
-        _xCoordList.RemoveAt(0);
-        _xCoordList.Add(0.5f);
-
-        Debug.Log(_xCoordList.Count);
-        Debug.Log("Neues Element Stelle 0:" +_xCoordList[0]);
-        Debug.Log("Am Ende:" +_xCoordList[19]);*/
-
     }
     
     
     void Update()
     {
-        //delete an stelle 0
-        //stelle count-1 = stelle coord+1
         if(_xCoordList.Count > 20)
         {
             _xCoordList.RemoveAt(0);
@@ -53,15 +38,13 @@ public class Testing : MonoBehaviour
             _pointsList.Clear();
             BuildPoints();
         }
-        
-
     }
 
     void OnGUI()
     {
-        GUI.Box(new Rect(2, 2, 50, 15), "Max: ");
-        GUI.Box(new Rect(2, 20, 50, 15), "Min: ");
-        GUI.Box(new Rect(2, 40, 50, 15), "Average: ");
+        GUI.Box(new Rect(2, 10, 100, 20), "Max: ");
+        GUI.Box(new Rect(2, 40, 100, 20), "Min: ");
+        GUI.Box(new Rect(2, 70, 100, 20), "Average: ");
     }
 
     void BuildPoints()
@@ -74,12 +57,23 @@ public class Testing : MonoBehaviour
         }
     }
 
-    void NewCoords()
+    void MaxCoord()
     {
-        //refresh points with new coords
-        foreach (GameObject _singlePoint in _pointsList)
+        //LINQ undso...
+        //int max = _xCoordList.Max(r => r.Age);
+    }
+    void MinCoord()
+    {
+        foreach (float min in _xCoordList)
         {
-           // _singlePoint.transform.position.y = whattheheck;
+
+        }
+    }
+    void AvCoord()
+    {
+        foreach (float av in _xCoordList)
+        {
+
         }
     }
 
