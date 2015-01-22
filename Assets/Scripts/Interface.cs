@@ -22,15 +22,15 @@ public class Interface : MonoBehaviour {
 
         if(gameObject.tag == "Maximum")
         {
-            _max.text = "Maximum: ";
+            _max.text = "";
         }
         if(gameObject.tag == "Minimum")
         {
-            _min.text = "Minimum: ";
+            _min.text = "";
         }
         if (gameObject.tag == "Average")
         {
-            _avg.text = "Average: ";
+            _avg.text = "";
         }
 
 	}
@@ -40,15 +40,15 @@ public class Interface : MonoBehaviour {
 
         if (gameObject.tag == "Maximum")
         {
-            _max.text = "Maximum: " + _maximum;
+            _max.text = "" + _maximum;
         }
         if (gameObject.tag == "Minimum")
         {
-            _min.text = "Minimum: " + _minimum;
+            _min.text = "" + _minimum;
         }
         if (gameObject.tag == "Average")
         {
-            _avg.text = "Average: " + _average;
+            _avg.text = "" + _average;
         }
 
 	}
