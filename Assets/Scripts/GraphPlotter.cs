@@ -4,6 +4,8 @@ using System.Collections;
 
 public class GraphPlotter : MonoBehaviour {
 
+    private float _listLength = 50;
+
 	private List<float> _xList = new List<float>(50);
     private List<float> _yList = new List<float>(50);
     private List<float> _zList = new List<float>(50);
@@ -11,12 +13,15 @@ public class GraphPlotter : MonoBehaviour {
 
     private static Material mat;
 
-    public float _offsetX = 0.025f;
-    public float _offsetY = 0.25f;
+    private float _offset;
+    private float _offsetY;
+    private float _pointDis;
 
 	void Start()
 	{
-
+        _offset = 0.1f;
+        _offsetY = 0.5f;
+        _pointDis = (0.8f / _listLength);
 	}
 
     void Update()
@@ -52,7 +57,7 @@ public class GraphPlotter : MonoBehaviour {
         mat = new Material("Shader \"Lines/Colored Blended\" {" +
           "SubShader { Pass { " +
           "    Blend SrcAlpha OneMinusSrcAlpha " +
-          "    ZWrite On Cull Off Fog { Mode Off } " +
+          "    ZWrite Off Cull Off Fog { Mode Off } " +
           "    ZTest Always " +
           "    BindChannels {" +
           "      Bind \"vertex\", vertex Bind \"color\", color }" +
@@ -63,13 +68,14 @@ public class GraphPlotter : MonoBehaviour {
 
     void RandomCoords(List<float> tempList)
     {
-        float maxX = 2.0f;
-        float minX = 0.0f;
-        float tempX = 1.0f;
+        float maxX = 1.0f;
+        float minX = -1.0f;
+        float tempX = 0.0f;
 
         for (int i = 0; i < 50; i++)
         {
             float random = Random.Range(-0.05f,0.15f);
+
             if((tempX + random) > maxX)
             {
                 tempList.Add(tempX-random);
@@ -107,9 +113,9 @@ public class GraphPlotter : MonoBehaviour {
         {
             if (t > 0 && t < 50)
             {
-                GL.Vertex3(0.05f * t, _xList[t] / 2, 0);
+                GL.Vertex3(_offset + (_pointDis * t), (_xList[t] / 2f) + _offsetY, 0);
             }
-            GL.Vertex3(0.05f * t, _xList[t] / 2, 0);
+            GL.Vertex3(_offset + (_pointDis * t), (_xList[t] / 2f)  + _offsetY, 0);
             //GL.Vertex3(1,1,0);
         }
         GL.End();
@@ -122,9 +128,9 @@ public class GraphPlotter : MonoBehaviour {
         {
             if (t > 0 && t < 50)
             {
-                GL.Vertex3(0.05f * t, _yList[t] / 2, 0);
+                GL.Vertex3(_offset + (_pointDis * t), (_yList[t] / 2f) + _offsetY, 0);
             }
-            GL.Vertex3(0.05f * t, _yList[t] / 2, 0);
+            GL.Vertex3(_offset + (_pointDis * t), (_yList[t] / 2f) + _offsetY, 0);
             //GL.Vertex3(1,1,0);
         }
         GL.End();
@@ -137,9 +143,9 @@ public class GraphPlotter : MonoBehaviour {
 		{
 			if (t>0 && t<50)
 			{
-                GL.Vertex3(0.05f * t, _zList[t] / 2, 0);
+                GL.Vertex3(_offset + (_pointDis * t), (_zList[t] / 2f) + _offsetY, 0);
 			}
-            GL.Vertex3(0.05f * t, _zList[t] / 2, 0);
+            GL.Vertex3(_offset + (_pointDis * t), (_zList[t] / 2f) + _offsetY, 0);
 			//GL.Vertex3(1,1,0);
 		}
 		GL.End();
@@ -152,9 +158,9 @@ public class GraphPlotter : MonoBehaviour {
         {
             if (t > 0 && t < 50)
             {
-                GL.Vertex3(0.05f * t, _uList[t] / 2, 0);
+                GL.Vertex3(_offset + (_pointDis * t), (_uList[t] / 2f) + _offsetY, 0);
             }
-            GL.Vertex3(0.05f * t, _uList[t] / 2, 0);
+            GL.Vertex3(_offset + (_pointDis * t), (_uList[t] / 2f) + _offsetY, 0);
             //GL.Vertex3(1,1,0);
         }
         GL.End();
