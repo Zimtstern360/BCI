@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Xml;
+using System.Xml.Serialization;
+using System.IO;
 
+[XmlRoot("BoredomCollection")]
 public class GraphPlotter : MonoBehaviour {
 
     private float _listLength = 50;
 
 	//private List<float> _xList = new List<float>(50);
+    [XmlArray("boredomValues"), XmlArrayItem("boredom")]
     private List<float> _boredomList = new List<float>(50);
 
     private static Material mat;
@@ -16,9 +21,17 @@ public class GraphPlotter : MonoBehaviour {
     private float _pointDis;
 
     //Affective
+    [XmlAttribute("boredomScore")]
     private float _boredomScore;
     private float _frustrationScore;
     private float _meditationScore;
+
+    GraphPlotter graphPlotter;
+
+    public GraphPlotter()
+    {
+
+    }
 
 	void Start()
 	{
@@ -46,19 +59,20 @@ public class GraphPlotter : MonoBehaviour {
 
         /*if (_xList.Count >= 50)
         {_xList.RemoveAt(0);}*/
-        Debug.Log("boredom: " + _boredomScore);
-        Debug.Log(_boredomList.Count);
-        Debug.Log("Wert: " +_boredomList[0]);
+
         if(_boredomList.Count < 50)
         {
             if (_boredomScore != EmoAffectiv.boredomScore)
             {
                 _boredomScore = EmoAffectiv.boredomScore;
                 _boredomList.Add(_boredomScore);
+                //xml add
+                //graphPlotter.Save(Path.Combine(Application.persistentDataPath, "monsters.xml"));
             }
             else
             {
                 _boredomList.Add(_boredomScore);
+                //xml add
             }
         }
         if(_boredomList.Count >= 50)
@@ -69,10 +83,12 @@ public class GraphPlotter : MonoBehaviour {
             {
                 _boredomScore = EmoAffectiv.boredomScore;
                 _boredomList.Add(_boredomScore);
+                //xml add
             }
             else
             {
                 _boredomList.Add(_boredomScore);
+                //xml add
             }
         }
     }
@@ -154,6 +170,15 @@ public class GraphPlotter : MonoBehaviour {
         GUI.Box(new Rect(0, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Waveform for Z");
         GUI.Box(new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Waveform for U");*/
  
+    }
+
+    public void Save(string path)
+    {
+        var serializer = new XmlSerializer(typeof(GraphPlotter));
+        using (var stream = new FileStream(path, FileMode.Create))
+        {
+            serializer.Serialize(stream, this);
+        }
     }
 
     void OnApplicationQuit()
