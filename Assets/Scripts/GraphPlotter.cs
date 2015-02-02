@@ -6,10 +6,8 @@ public class GraphPlotter : MonoBehaviour {
 
     private float _listLength = 50;
 
-	private List<float> _xList = new List<float>(50);
-    private List<float> _yList = new List<float>(50);
-    private List<float> _zList = new List<float>(50);
-    private List<float> _uList = new List<float>(50);
+	//private List<float> _xList = new List<float>(50);
+    private List<float> _boredomList = new List<float>(50);
 
     private static Material mat;
 
@@ -17,38 +15,65 @@ public class GraphPlotter : MonoBehaviour {
     private float _offsetY;
     private float _pointDis;
 
+    //Affective
+    private float _boredomScore;
+    private float _frustrationScore;
+    private float _meditationScore;
+
 	void Start()
 	{
         _offset = 0.1f;
         _offsetY = 0.5f;
         _pointDis = (0.8f / _listLength);
+
+        //set affective states once for start
+        _boredomScore = EmoAffectiv.boredomScore;
+        _frustrationScore = EmoAffectiv.frustrationScore;
+        _meditationScore = EmoAffectiv.meditationScore;
+
+        //clear list
+        _boredomList.Clear();
+        //fill list
+        for (int i = 0; i < 50; i++ )
+        {
+            _boredomList.Add(0);
+        }
 	}
 
     void Update()
     {
-        RandomCoords(_xList);
-        RandomCoords(_yList);
-        RandomCoords(_zList);
-        RandomCoords(_uList);
+        //RandomCoords(_xList);
 
-        if (_xList.Count >= 50)
+        /*if (_xList.Count >= 50)
+        {_xList.RemoveAt(0);}*/
+        Debug.Log("boredom: " + _boredomScore);
+        Debug.Log(_boredomList.Count);
+        Debug.Log("Wert: " +_boredomList[0]);
+        if(_boredomList.Count < 50)
         {
-            _xList.RemoveAt(0);
+            if (_boredomScore != EmoAffectiv.boredomScore)
+            {
+                _boredomScore = EmoAffectiv.boredomScore;
+                _boredomList.Add(_boredomScore);
+            }
+            else
+            {
+                _boredomList.Add(_boredomScore);
+            }
         }
-
-        if (_yList.Count >= 50)
+        if(_boredomList.Count >= 50)
         {
-            _yList.RemoveAt(0);
-        }
+            _boredomList.RemoveAt(0);
 
-        if (_zList.Count >= 50)
-        {
-            _zList.RemoveAt(0);
-        }
-
-        if (_uList.Count >= 50)
-        {
-            _uList.RemoveAt(0);
+            if (_boredomScore != EmoAffectiv.boredomScore)
+            {
+                _boredomScore = EmoAffectiv.boredomScore;
+                _boredomList.Add(_boredomScore);
+            }
+            else
+            {
+                _boredomList.Add(_boredomScore);
+            }
         }
     }
 
@@ -66,7 +91,7 @@ public class GraphPlotter : MonoBehaviour {
         mat.shader.hideFlags = HideFlags.HideAndDontSave;
     }
 
-    void RandomCoords(List<float> tempList)
+    /*void RandomCoords(List<float> tempList)
     {
         float maxX = 1.0f;
         float minX = -1.0f;
@@ -94,7 +119,7 @@ public class GraphPlotter : MonoBehaviour {
             //add(x + random.range)
             //tempList.Add(Random.Range(0.0f, 2.0f));
         }
-    }
+    }*/
 
 	void OnPostRender() {
 		if (!mat) {
@@ -113,58 +138,11 @@ public class GraphPlotter : MonoBehaviour {
         {
             if (t > 0 && t < 50)
             {
-                GL.Vertex3(_offset + (_pointDis * t), (_xList[t] / 2f) + _offsetY, 0);
+                GL.Vertex3(_offset + (_pointDis * t), (_boredomList[t] / 2f) + _offsetY, 0);
             }
-            GL.Vertex3(_offset + (_pointDis * t), (_xList[t] / 2f)  + _offsetY, 0);
-            //GL.Vertex3(1,1,0);
+            GL.Vertex3(_offset + (_pointDis * t), (_boredomList[t] / 2f) + _offsetY, 0);
         }
         GL.End();
-
-        //Begin Waveform Y
-        GL.Begin(GL.LINES);
-        GL.Color(Color.black);
-        GL.Viewport(new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 2, Screen.height / 2));
-        for (int t = 0; t < 50; t++)
-        {
-            if (t > 0 && t < 50)
-            {
-                GL.Vertex3(_offset + (_pointDis * t), (_yList[t] / 2f) + _offsetY, 0);
-            }
-            GL.Vertex3(_offset + (_pointDis * t), (_yList[t] / 2f) + _offsetY, 0);
-            //GL.Vertex3(1,1,0);
-        }
-        GL.End();
-
-        //Begin Waveform Z
-        GL.Begin(GL.LINES);
-        GL.Color(Color.black);
-        GL.Viewport(new Rect(0, 0, Screen.width / 2, Screen.height / 2));
-		for (int t = 0; t < 50; t++) 
-		{
-			if (t>0 && t<50)
-			{
-                GL.Vertex3(_offset + (_pointDis * t), (_zList[t] / 2f) + _offsetY, 0);
-			}
-            GL.Vertex3(_offset + (_pointDis * t), (_zList[t] / 2f) + _offsetY, 0);
-			//GL.Vertex3(1,1,0);
-		}
-		GL.End();
-
-        //Begin Waveform U
-        GL.Begin(GL.LINES);
-        GL.Color(Color.black);
-        GL.Viewport(new Rect(Screen.width / 2, 0, Screen.width / 2, Screen.height / 2));
-        for (int t = 0; t < 50; t++)
-        {
-            if (t > 0 && t < 50)
-            {
-                GL.Vertex3(_offset + (_pointDis * t), (_uList[t] / 2f) + _offsetY, 0);
-            }
-            GL.Vertex3(_offset + (_pointDis * t), (_uList[t] / 2f) + _offsetY, 0);
-            //GL.Vertex3(1,1,0);
-        }
-        GL.End();
-
 		GL.PopMatrix();
 	}
 
@@ -172,9 +150,9 @@ public class GraphPlotter : MonoBehaviour {
     void OnGUI()
     {
         GUI.Box(new Rect(0, 0, Screen.width / 2, Screen.height / 2), "Waveform for X");
-        GUI.Box(new Rect(Screen.width / 2, 0, Screen.width / 2, Screen.height / 2), "Waveform for Y");
+        /*GUI.Box(new Rect(Screen.width / 2, 0, Screen.width / 2, Screen.height / 2), "Waveform for Y");
         GUI.Box(new Rect(0, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Waveform for Z");
-        GUI.Box(new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Waveform for U");
+        GUI.Box(new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Waveform for U");*/
  
     }
 
