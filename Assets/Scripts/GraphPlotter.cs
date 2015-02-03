@@ -5,14 +5,13 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 
-[XmlRoot("BoredomCollection")]
 public class GraphPlotter : MonoBehaviour {
 
     private float _listLength = 50;
 
-	//private List<float> _xList = new List<float>(50);
-    [XmlArray("boredomValues"), XmlArrayItem("boredom")]
     private List<float> _boredomList = new List<float>(50);
+    private List<float> _frustrationList = new List<float>(50);
+    private List<float> _meditationList = new List<float>(50);
 
     private static Material mat;
 
@@ -21,17 +20,13 @@ public class GraphPlotter : MonoBehaviour {
     private float _pointDis;
 
     //Affective
-    [XmlAttribute("boredomScore")]
     private float _boredomScore;
     private float _frustrationScore;
     private float _meditationScore;
 
-    GraphPlotter graphPlotter;
-
-    public GraphPlotter()
-    {
-
-    }
+    private string boredomFile;
+    private string frustrationFile;
+    private string meditationFile;
 
 	void Start()
 	{
@@ -39,40 +34,43 @@ public class GraphPlotter : MonoBehaviour {
         _offsetY = 0.5f;
         _pointDis = (0.8f / _listLength);
 
+        //file for saving values
+        boredomFile = @"C:/Users/Steffi/Documents/Master/boredomValues.txt";
+        frustrationFile = @"C:/Users/Steffi/Documents/Master/frustrationValues.txt";
+        meditationFile = @"C:/Users/Steffi/Documents/Master/meditationValues.txt";
+
         //set affective states once for start
         _boredomScore = EmoAffectiv.boredomScore;
         _frustrationScore = EmoAffectiv.frustrationScore;
         _meditationScore = EmoAffectiv.meditationScore;
 
-        //clear list
+        //clear lists
         _boredomList.Clear();
-        //fill list
+        _frustrationList.Clear();
+        _meditationList.Clear();
+        //fill lists
         for (int i = 0; i < 50; i++ )
         {
             _boredomList.Add(0);
+            _frustrationList.Add(0);
+            _meditationList.Add(0);
         }
 	}
 
     void Update()
     {
-        //RandomCoords(_xList);
-
-        /*if (_xList.Count >= 50)
-        {_xList.RemoveAt(0);}*/
-
+        #region boredomStuff
+        //Boredom Stuff
         if(_boredomList.Count < 50)
         {
             if (_boredomScore != EmoAffectiv.boredomScore)
             {
                 _boredomScore = EmoAffectiv.boredomScore;
                 _boredomList.Add(_boredomScore);
-                //xml add
-                //graphPlotter.Save(Path.Combine(Application.persistentDataPath, "monsters.xml"));
             }
             else
             {
                 _boredomList.Add(_boredomScore);
-                //xml add
             }
         }
         if(_boredomList.Count >= 50)
@@ -83,14 +81,131 @@ public class GraphPlotter : MonoBehaviour {
             {
                 _boredomScore = EmoAffectiv.boredomScore;
                 _boredomList.Add(_boredomScore);
-                //xml add
             }
             else
             {
                 _boredomList.Add(_boredomScore);
-                //xml add
             }
         }
+        //Saving Boredom Values
+        for (int i = 0; i < _boredomList.Count; i++ )
+        {
+             if (!File.Exists(boredomFile))
+            {
+                // Create a file to write to. 
+                using (StreamWriter sw = File.CreateText(boredomFile))
+                {
+                    sw.WriteLine("Values of Boredom Graph");
+                    sw.WriteLine("...");
+                }
+            }
+
+            using (StreamWriter sw = File.AppendText(boredomFile))
+            {
+                sw.WriteLine("Wert an Stelle " + i + ": ");
+                sw.WriteLine(_boredomList[i].ToString());
+            }
+
+        }
+        #endregion 
+
+        #region frustrationStuff
+        //frustration Stuff
+        if (_frustrationList.Count < 50)
+        {
+            if (_frustrationScore != EmoAffectiv.frustrationScore)
+            {
+                _frustrationScore = EmoAffectiv.frustrationScore;
+                _frustrationList.Add(_frustrationScore);
+            }
+            else
+            {
+                _frustrationList.Add(_frustrationScore);
+            }
+        }
+        if (_frustrationList.Count >= 50)
+        {
+            _frustrationList.RemoveAt(0);
+
+            if (_frustrationScore != EmoAffectiv.frustrationScore)
+            {
+                _frustrationScore = EmoAffectiv.frustrationScore;
+                _frustrationList.Add(_frustrationScore);
+            }
+            else
+            {
+                _frustrationList.Add(_frustrationScore);
+            }
+        }
+        //Saving Frustration Values
+        for (int i = 0; i < _frustrationList.Count; i++)
+        {
+            if (!File.Exists(frustrationFile))
+            {
+                // Create a file to write to. 
+                using (StreamWriter sw = File.CreateText(frustrationFile))
+                {
+                    sw.WriteLine("Values of Frustration Graph");
+                    sw.WriteLine("...");
+                }
+            }
+
+            using (StreamWriter sw = File.AppendText(frustrationFile))
+            {
+                sw.WriteLine("Wert an Stelle " + i + ": ");
+                sw.WriteLine(_frustrationList[i].ToString());
+            }
+        }
+        #endregion
+
+        #region meditationStuff
+        //frustration Stuff
+        if (_meditationList.Count < 50)
+        {
+            if (_meditationScore != EmoAffectiv.meditationScore)
+            {
+                _meditationScore = EmoAffectiv.meditationScore;
+                _meditationList.Add(_meditationScore);
+            }
+            else
+            {
+                _meditationList.Add(_meditationScore);
+            }
+        }
+        if (_meditationList.Count >= 50)
+        {
+            _meditationList.RemoveAt(0);
+
+            if (_meditationScore != EmoAffectiv.meditationScore)
+            {
+                _meditationScore = EmoAffectiv.meditationScore;
+                _meditationList.Add(_meditationScore);
+            }
+            else
+            {
+                _meditationList.Add(_meditationScore);
+            }
+        }
+        //Saving Frustration Values
+        for (int i = 0; i < _meditationList.Count; i++)
+        {
+            if (!File.Exists(meditationFile))
+            {
+                // Create a file to write to. 
+                using (StreamWriter sw = File.CreateText(meditationFile))
+                {
+                    sw.WriteLine("Values of Meditation Graph");
+                    sw.WriteLine("...");
+                }
+            }
+
+            using (StreamWriter sw = File.AppendText(meditationFile))
+            {
+                sw.WriteLine("Wert an Stelle " + i + ": ");
+                sw.WriteLine(_meditationList[i].ToString());
+            }
+        }
+        #endregion
     }
 
     void Awake()
@@ -170,15 +285,6 @@ public class GraphPlotter : MonoBehaviour {
         GUI.Box(new Rect(0, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Waveform for Z");
         GUI.Box(new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Waveform for U");*/
  
-    }
-
-    public void Save(string path)
-    {
-        var serializer = new XmlSerializer(typeof(GraphPlotter));
-        using (var stream = new FileStream(path, FileMode.Create))
-        {
-            serializer.Serialize(stream, this);
-        }
     }
 
     void OnApplicationQuit()
