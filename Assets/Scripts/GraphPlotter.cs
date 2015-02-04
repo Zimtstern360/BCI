@@ -31,7 +31,9 @@ public class GraphPlotter : MonoBehaviour {
     //file handling
     public string userName;
     private string path = "C:/Users/Steffi/Documents/Master/Masterthesis/Results/";
-    private string pathEnd = ".txt";
+    private string pathEndBoredom = "Boredom.txt";
+    private string pathEndFrustration = "Frustration.txt";
+    private string pathEndMeditation = "Meditation.txt";
 
     string savePathBoredomNew;
     string savePathFrustrationNew;
@@ -50,9 +52,9 @@ public class GraphPlotter : MonoBehaviour {
         frustrationFile = @"C:/Users/Steffi/Documents/Master/Masterthesis/frustrationValues.txt";
         meditationFile = @"C:/Users/Steffi/Documents/Master/Masterthesis/meditationValues.txt";
 
-        savePathBoredomNew = path + userName + pathEnd;
-        savePathFrustrationNew = path + userName + pathEnd;
-        savePathMeditationNew = path + userName + pathEnd;
+        savePathBoredomNew = path + userName + pathEndBoredom;
+        savePathFrustrationNew = path + userName + pathEndFrustration;
+        savePathMeditationNew = path + userName + pathEndMeditation;
 
         //set affective states once for start
         _boredomScore = EmoAffectiv.boredomScore;
@@ -317,12 +319,23 @@ public class GraphPlotter : MonoBehaviour {
     void OnApplicationQuit()
     {
         DestroyImmediate(mat);
-        // Move the file.
+        // Move boredom file
         if (File.Exists(savePathBoredomNew))
         {
             File.Delete(savePathBoredomNew);
         }
         File.Move(boredomFile, savePathBoredomNew);
+        // Move frustration file
+        if (File.Exists(savePathFrustrationNew))
+        {
+            File.Delete(savePathFrustrationNew);
+        }
+        File.Move(frustrationFile, savePathFrustrationNew);
+        // Move meditation file
+        if (File.Exists(savePathMeditationNew))
+        {
+            File.Delete(savePathMeditationNew);
+        }
+        File.Move(meditationFile, savePathMeditationNew);
     }
-
 }
