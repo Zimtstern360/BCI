@@ -28,16 +28,31 @@ public class GraphPlotter : MonoBehaviour {
     private string frustrationFile;
     private string meditationFile;
 
+    //file handling
+    public string userName;
+    private string path = "C:/Users/Steffi/Documents/Master/Masterthesis/Results/";
+    private string pathEnd = ".txt";
+
+    string savePathBoredomNew;
+    string savePathFrustrationNew;
+    string savePathMeditationNew;
+
 	void Start()
 	{
         _offset = 0.1f;
         _offsetY = 0.5f;
         _pointDis = (0.8f / _listLength);
 
-        //file for saving values
-        boredomFile = @"C:/Users/Steffi/Documents/Master/boredomValues.txt";
-        frustrationFile = @"C:/Users/Steffi/Documents/Master/frustrationValues.txt";
-        meditationFile = @"C:/Users/Steffi/Documents/Master/meditationValues.txt";
+        //temp file for saving values
+        //TODO: funktion zum löschen und neu anlegen
+        ClearTxtFiles();
+        boredomFile = @"C:/Users/Steffi/Documents/Master/Masterthesis/boredomValues.txt";
+        frustrationFile = @"C:/Users/Steffi/Documents/Master/Masterthesis/frustrationValues.txt";
+        meditationFile = @"C:/Users/Steffi/Documents/Master/Masterthesis/meditationValues.txt";
+
+        savePathBoredomNew = path + userName + pathEnd;
+        savePathFrustrationNew = path + userName + pathEnd;
+        savePathMeditationNew = path + userName + pathEnd;
 
         //set affective states once for start
         _boredomScore = EmoAffectiv.boredomScore;
@@ -102,7 +117,6 @@ public class GraphPlotter : MonoBehaviour {
 
             using (StreamWriter sw = File.AppendText(boredomFile))
             {
-                sw.WriteLine("Wert an Stelle " + i + ": ");
                 sw.WriteLine(_boredomList[i].ToString());
             }
 
@@ -152,7 +166,6 @@ public class GraphPlotter : MonoBehaviour {
 
             using (StreamWriter sw = File.AppendText(frustrationFile))
             {
-                sw.WriteLine("Wert an Stelle " + i + ": ");
                 sw.WriteLine(_frustrationList[i].ToString());
             }
         }
@@ -201,7 +214,6 @@ public class GraphPlotter : MonoBehaviour {
 
             using (StreamWriter sw = File.AppendText(meditationFile))
             {
-                sw.WriteLine("Wert an Stelle " + i + ": ");
                 sw.WriteLine(_meditationList[i].ToString());
             }
         }
@@ -277,7 +289,6 @@ public class GraphPlotter : MonoBehaviour {
 		GL.PopMatrix();
 	}
 
-
     void OnGUI()
     {
         GUI.Box(new Rect(0, 0, Screen.width / 2, Screen.height / 2), "Waveform for X");
@@ -287,9 +298,31 @@ public class GraphPlotter : MonoBehaviour {
  
     }
 
+    void ClearTxtFiles()
+    {
+        if(File.Exists(boredomFile))
+        {
+            File.Delete(boredomFile);
+        }
+        if (File.Exists(frustrationFile))
+        {
+            File.Delete(frustrationFile);
+        }
+        if (File.Exists(meditationFile))
+        {
+            File.Delete(meditationFile);
+        }
+    }
+
     void OnApplicationQuit()
     {
         DestroyImmediate(mat);
+        // Move the file.
+        if (File.Exists(savePathBoredomNew))
+        {
+            File.Delete(savePathBoredomNew);
+        }
+        File.Move(boredomFile, savePathBoredomNew);
     }
 
 }
