@@ -4,6 +4,7 @@ using System.Collections;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using System.Linq;
 
 public class GraphPlotter : MonoBehaviour {
 
@@ -19,7 +20,7 @@ public class GraphPlotter : MonoBehaviour {
     private float _offsetY;
     private float _pointDis;
 
-    //Affective
+    //Affective values and txt files
     private float _boredomScore;
     private float _frustrationScore;
     private float _meditationScore;
@@ -41,12 +42,12 @@ public class GraphPlotter : MonoBehaviour {
 
 	void Start()
 	{
+        //offset values for displaying graphs
         _offset = 0.1f;
         _offsetY = 0.5f;
         _pointDis = (0.8f / _listLength);
 
-        //temp file for saving values
-        //TODO: funktion zum löschen und neu anlegen
+        //temp file for saving values, gets moved and saved permanently later
         ClearTxtFiles();
         boredomFile = @"C:/Users/Steffi/Documents/Master/Masterthesis/boredomValues.txt";
         frustrationFile = @"C:/Users/Steffi/Documents/Master/Masterthesis/frustrationValues.txt";
@@ -56,21 +57,21 @@ public class GraphPlotter : MonoBehaviour {
         savePathFrustrationNew = path + userName + pathEndFrustration;
         savePathMeditationNew = path + userName + pathEndMeditation;
 
-        //set affective states once for start
+        //set affective states for start once
         _boredomScore = EmoAffectiv.boredomScore;
         _frustrationScore = EmoAffectiv.frustrationScore;
         _meditationScore = EmoAffectiv.meditationScore;
 
-        //clear lists
+        //clear lists for once
         _boredomList.Clear();
         _frustrationList.Clear();
         _meditationList.Clear();
-        //fill lists
+        //fill lists for once
         for (int i = 0; i < 50; i++ )
         {
-            _boredomList.Add(0);
-            _frustrationList.Add(0);
-            _meditationList.Add(0);
+            _boredomList.Add(2);
+            _frustrationList.Add(4);
+            _meditationList.Add(8);
         }
 	}
 
@@ -104,7 +105,7 @@ public class GraphPlotter : MonoBehaviour {
                 _boredomList.Add(_boredomScore);
             }
         }
-        //Saving Boredom Values
+        //Saving boredom values
         for (int i = 0; i < _boredomList.Count; i++ )
         {
              if (!File.Exists(boredomFile))
@@ -220,6 +221,7 @@ public class GraphPlotter : MonoBehaviour {
             }
         }
         #endregion
+
     }
 
     void Awake()
@@ -236,36 +238,6 @@ public class GraphPlotter : MonoBehaviour {
         mat.shader.hideFlags = HideFlags.HideAndDontSave;
     }
 
-    /*void RandomCoords(List<float> tempList)
-    {
-        float maxX = 1.0f;
-        float minX = -1.0f;
-        float tempX = 0.0f;
-
-        for (int i = 0; i < 50; i++)
-        {
-            float random = Random.Range(-0.05f,0.15f);
-
-            if((tempX + random) > maxX)
-            {
-                tempList.Add(tempX-random);
-            }
-            if ((tempX + random) < minX)
-            {
-                tempList.Add(tempX + random);
-            }
-            else
-            {
-                tempList.Add(tempX + random);
-            }
-            //if(x+random.range > maxX) -> x-random.range
-            //if(x+random.range < minX) -> x+random.range
-            //else 
-            //add(x + random.range)
-            //tempList.Add(Random.Range(0.0f, 2.0f));
-        }
-    }*/
-
 	void OnPostRender() {
 		if (!mat) {
 			Debug.LogError("Please Assign a material on the inspector");
@@ -275,7 +247,7 @@ public class GraphPlotter : MonoBehaviour {
 		mat.SetPass(0);
 		GL.LoadOrtho();
 
-        //Begin Waveform X
+        //Boredom Graph (upper left)
         GL.Begin(GL.LINES);
         GL.Color(Color.black);
         GL.Viewport(new Rect(0, Screen.height/2, Screen.width/2, Screen.height/2));
@@ -288,15 +260,53 @@ public class GraphPlotter : MonoBehaviour {
             GL.Vertex3(_offset + (_pointDis * t), (_boredomList[t] / 2f) + _offsetY, 0);
         }
         GL.End();
+
+        //Frustration Graph (upper right)
+        GL.Begin(GL.LINES);
+        GL.Color(Color.black);
+        GL.Viewport(new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 2, Screen.height / 2));
+        for (int t = 0; t < 50; t++)
+        {
+            if (t > 0 && t < 50)
+            {
+                GL.Vertex3(_offset + (_pointDis * t), (_boredomList[t] / 2f) + _offsetY, 0);
+            }
+            GL.Vertex3(_offset + (_pointDis * t), (_boredomList[t] / 2f) + _offsetY, 0);
+        }
+        GL.End();
+
+        //Meditation Graph (lower left)
+        GL.Begin(GL.LINES);
+        GL.Color(Color.black);
+        GL.Viewport(new Rect(0, 0, Screen.width / 2, Screen.height / 2));
+        for (int t = 0; t < 50; t++)
+        {
+            if (t > 0 && t < 50)
+            {
+                GL.Vertex3(_offset + (_pointDis * t), (_boredomList[t] / 2f) + _offsetY, 0);
+            }
+            GL.Vertex3(_offset + (_pointDis * t), (_boredomList[t] / 2f) + _offsetY, 0);
+        }
+        GL.End();
+
+        //End GL
 		GL.PopMatrix();
 	}
 
     void OnGUI()
     {
-        GUI.Box(new Rect(0, 0, Screen.width / 2, Screen.height / 2), "Waveform for X");
-        /*GUI.Box(new Rect(Screen.width / 2, 0, Screen.width / 2, Screen.height / 2), "Waveform for Y");
-        GUI.Box(new Rect(0, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Waveform for Z");
-        GUI.Box(new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Waveform for U");*/
+        GUI.Box(new Rect(0, 0, Screen.width / 2, Screen.height / 2), "Boredom Graph");
+        GUI.Box(new Rect(Screen.width / 2, 0, Screen.width / 2, Screen.height / 2), "Frustration Graph");
+        GUI.Box(new Rect(0, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Meditation Graph");
+        //Max values
+        GUI.Box(new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 2, Screen.height / 2), "Max & Min Values");
+        GUI.Box(new Rect((Screen.width / 2) + 25, (Screen.height / 2) + 20, 200, 25), "Max. Boredom Value: "+MaxValue(_boredomList));
+        GUI.Box(new Rect((Screen.width / 2) + 25, (Screen.height / 2) + 45, 200, 25), "Max. Frustration Value: " + MaxValue(_frustrationList));
+        GUI.Box(new Rect((Screen.width / 2) + 25, (Screen.height / 2) + 70, 200, 25), "Max. Meditation Value: " + MaxValue(_meditationList));
+        //Min values
+        GUI.Box(new Rect((Screen.width / 2) + 25, (Screen.height / 2) + 110, 200, 25), "Min. Boredom Value: " + MinValue(_boredomList));
+        GUI.Box(new Rect((Screen.width / 2) + 25, (Screen.height / 2) + 135, 200, 25), "Min. Frustration Value: " + MinValue(_frustrationList));
+        GUI.Box(new Rect((Screen.width / 2) + 25, (Screen.height / 2) + 160, 200, 25), "Min. Meditation Value: " + MinValue(_meditationList));
  
     }
 
@@ -314,6 +324,20 @@ public class GraphPlotter : MonoBehaviour {
         {
             File.Delete(meditationFile);
         }
+    }
+
+    //get max value from list with LINQ
+    float MaxValue(List<float> givenList)
+    {
+        float result = (from res in givenList select res).Max();
+        return result;
+    }
+
+    //get min value from list with LINQ
+    float MinValue(List<float> givenList)
+    {
+        float result = (from res in givenList select res).Min();
+        return result;
     }
 
     void OnApplicationQuit()
